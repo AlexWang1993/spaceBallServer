@@ -1,4 +1,7 @@
+
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.websocket.server.WebSocketHandler;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
@@ -15,10 +18,16 @@ public class JettyServer {
             }
         };
         ServletContextHandler ctx = new ServletContextHandler();
-        ctx.setContextPath("/");
+        ctx.setContextPath("/server");
         ctx.addServlet(GameServiceSocketServlet.class, "/socket");
+
+        ContextHandler staticContextHandler = new ContextHandler("/main");
+        ResourceHandler resourceHandler = new ResourceHandler();
+        resourceHandler.setResourceBase("/static");
+        ctx.setHandler(resourceHandler);
  
         server.setHandler(ctx);
+        server.setHandler(staticContextHandler);
  
         server.start();
         server.join();

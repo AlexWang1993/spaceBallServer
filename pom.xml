@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>SpaceBall</groupId>
   <artifactId>spaceball</artifactId>
-  <packaging>war</packaging>
+  <packaging>jar</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <name>spaceball Maven Webapp</name>
   <url>http://maven.apache.org</url>
@@ -29,8 +29,62 @@
     <artifactId>websocket-server</artifactId>
     <version>9.3.11.v20160721</version>
 </dependency>
+<dependency>
+    <groupId>log4j</groupId>
+    <artifactId>log4j</artifactId>
+    <version>1.2.17</version>
+</dependency>
   </dependencies>
   <build>
     <finalName>spaceball</finalName>
+    <plugins>
+
+			<!-- download source code in Eclipse, best practice -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>false</downloadJavadocs>
+				</configuration>
+			</plugin>
+
+			<!-- Set a compiler level -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+
+		<!-- Maven Shade Plugin -->
+		<plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-shade-plugin</artifactId>
+		  <version>2.3</version>
+		  <executions>
+		     <!-- Run shade goal on package phase -->
+		    <execution>
+			<phase>package</phase>
+			<goals>
+				<goal>shade</goal>
+			</goals>
+			<configuration>
+			  <transformers>
+				<!-- add Main-Class to manifest file -->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+					<mainClass>JettyServer</mainClass>
+				</transformer>
+			  </transformers>
+			</configuration>
+		      </execution>
+		  </executions>
+		</plugin>
+
+		</plugins>
   </build>
 </project>
